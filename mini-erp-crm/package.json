@@ -1,0 +1,10 @@
+{
+  "name": "mini-erp-crm-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "setup": "cd backend && npm install && npx prisma generate && npx prisma db push && npm run seed && cd ../frontend && npm install",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev"
+  }
+}

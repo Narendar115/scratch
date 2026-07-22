@@ -1,0 +1,220 @@
+{
+	"info": {
+		"_postman_id": "erp-crm-operations-portal",
+		"name": "Mini ERP + CRM Operations Portal API",
+		"description": "Production-Ready REST API collection for Mini ERP + CRM Portal including Auth, Customers, Inventory, Sales Challans, Invoices, and Dashboard Stats.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login Admin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"email\": \"admin@company.com\",\n  \"password\": \"password123\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/auth/login",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "5000",
+							"path": ["api", "auth", "login"]
+						}
+					}
+				},
+				{
+					"name": "Get Current User Profile",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/auth/me",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "5000",
+							"path": ["api", "auth", "me"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Dashboard",
+			"item": [
+				{
+					"name": "Get Dashboard Aggregated Stats",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/dashboard",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "5000",
+							"path": ["api", "dashboard"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Customers CRM",
+			"item": [
+				{
+					"name": "Get Customers (Paginated & Filtered)",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/customers?page=1&limit=10&status=ACTIVE",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "5000",
+							"path": ["api", "customers"],
+							"query": [
+								{ "key": "page", "value": "1" },
+								{ "key": "limit", "value": "10" },
+								{ "key": "status", "value": "ACTIVE" }
+							]
+						}
+					}
+				},
+				{
+					"name": "Create Customer Account",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Suresh Patel\",\n  \"businessName\": \"Patel Enterprises\",\n  \"mobile\": \"+91 98989 12345\",\n  \"email\": \"suresh@patelent.com\",\n  \"gstNumber\": \"24AAAAP123411Z8\",\n  \"customerType\": \"DISTRIBUTOR\",\n  \"address\": \"Plot 10, GIDC Industrial Estate, Ahmedabad, GJ\",\n  \"status\": \"ACTIVE\",\n  \"followUpDate\": \"2026-08-01\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/customers",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "5000",
+							"path": ["api", "customers"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Inventory & Products",
+			"item": [
+				{
+					"name": "Get Product Inventory",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:5000/api/products",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "5000",
+							"path": ["api", "products"]
+						}
+					}
+				},
+				{
+					"name": "Adjust Product Stock",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"quantityChanged\": 25,\n  \"movementType\": \"IN\",\n  \"reason\": \"Physical Inventory Warehouse Receive\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/products/:id/adjust-stock",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "5000",
+							"path": ["api", "products", ":id", "adjust-stock"]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Sales Challans",
+			"item": [
+				{
+					"name": "Confirm Sales Challan (Triggers Stock Deduction)",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"CONFIRMED\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:5000/api/challans/:id/status",
+							"protocol": "http",
+							"host": ["localhost"],
+							"port": "5000",
+							"path": ["api", "challans", ":id", "status"]
+						}
+					}
+				}
+			]
+		}
+	]
+}
