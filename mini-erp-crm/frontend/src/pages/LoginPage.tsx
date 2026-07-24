@@ -14,15 +14,14 @@ export const LoginPage: React.FC = () => {
   const { setAuth } = useAuthStore();
   const navigate = useNavigate();
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const performLogin = async (loginEmail: string, loginPass: string) => {
     setError('');
     setLoading(true);
 
     try {
-      const res = await api.post('/auth/login', { email, password });
+      const res = await api.post('/auth/login', { email: loginEmail, password: loginPass });
       setAuth(res.data.user, res.data.token);
-      toast.success(`Welcome back, ${res.data.user.name}!`);
+      toast.success(`Welcome back, ${res.data.user.name}! (${res.data.user.role} Role)`);
       navigate('/');
     } catch (err: any) {
       const msg = err.response?.data?.error || 'Invalid credentials. Please try again.';
@@ -33,11 +32,22 @@ export const LoginPage: React.FC = () => {
     }
   };
 
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    performLogin(email, password);
+  };
+
+  const handleQuickLogin = (targetEmail: string) => {
+    setEmail(targetEmail);
+    setPassword('password123');
+    performLogin(targetEmail, 'password123');
+  };
+
   const quickRoles = [
-    { label: 'Admin', email: 'admin@company.com', color: 'border-purple-500 hover:bg-purple-50 dark:hover:bg-purple-950/40 text-purple-700 dark:text-purple-300' },
-    { label: 'Sales', email: 'sales@company.com', color: 'border-blue-500 hover:bg-blue-50 dark:hover:bg-blue-950/40 text-blue-700 dark:text-blue-300' },
-    { label: 'Warehouse', email: 'warehouse@company.com', color: 'border-amber-500 hover:bg-amber-50 dark:hover:bg-amber-950/40 text-amber-700 dark:text-amber-300' },
-    { label: 'Accounts', email: 'accounts@company.com', color: 'border-emerald-500 hover:bg-emerald-50 dark:hover:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300' }
+    { label: 'Admin', email: 'admin@company.com', color: 'border-purple-500 hover:bg-purple-950/60 text-purple-300' },
+    { label: 'Sales', email: 'sales@company.com', color: 'border-blue-500 hover:bg-blue-950/60 text-blue-300' },
+    { label: 'Warehouse', email: 'warehouse@company.com', color: 'border-amber-500 hover:bg-amber-950/60 text-amber-300' },
+    { label: 'Accounts', email: 'accounts@company.com', color: 'border-emerald-500 hover:bg-emerald-950/60 text-emerald-300' }
   ];
 
   return (
@@ -119,18 +129,16 @@ export const LoginPage: React.FC = () => {
 
         <div className="mt-8 pt-6 border-t border-slate-800">
           <p className="text-xs font-semibold uppercase tracking-wider text-slate-400 mb-3 text-center">
-            Demo Login Credentials (One-Click)
+            One-Click Demo Login
           </p>
           <div className="grid grid-cols-2 gap-2">
             {quickRoles.map((r) => (
               <button
                 key={r.label}
                 type="button"
-                onClick={() => {
-                  setEmail(r.email);
-                  setPassword('password123');
-                }}
-                className={`px-3 py-2 text-xs font-semibold rounded-xl border ${r.color} transition-all flex items-center justify-between`}
+                disabled={loading}
+                onClick={() => handleQuickLogin(r.email)}
+                className={`px-3 py-2 text-xs font-semibold rounded-xl border ${r.color} transition-all flex items-center justify-between disabled:opacity-50`}
               >
                 <span>{r.label}</span>
                 <CheckCircle2 className="w-3.5 h-3.5 opacity-60" />

@@ -19,12 +19,12 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Response interceptor for handling 401 Unauthorized globally
+// Response interceptor for handling 401/403 Unauthorized globally
 api.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // Clear token and redirect to login if session expired
+      // Clear token and redirect to login if session expired or invalid
       useAuthStore.getState().logout();
     }
     return Promise.reject(error);
